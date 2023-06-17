@@ -1,0 +1,30 @@
+setwd("C:/LEARNING/R")
+pm0 <- read.table("data/RD_501_88101_1999-0.txt", comment.char = "#", header = FALSE, sep = "|", na.strings = "")
+head(pm0[,1:13])
+cnames <- readLines("data/RD_501_88101_1999-0.txt", 1)
+cnames <- strsplit(cnames, "|", fixed = TRUE)
+print(cnames)
+names(pm0) <- make.names(cnames[[1]])
+print(pm0[, 1:13])
+x0 <- pm0$Sample.Value
+summary(x0)
+mean(is.na(x0))
+names(pm1) <- make.names(cnames[[1]])
+x1 <- pm1$Sample.Value
+print(x1)
+boxplot(log2(x0), log2(x1))
+summary(x0)
+summary(x1)
+negative <- x1 < 0
+mean(negative, na.rm = T)
+dates <- pm1$Date
+dates <- as.Date(as.character(dates), "%Y%m%d")
+missing.months <- month.name[as.POSIXlt(dates)$mon + 1]
+tab <- table(factor(missing.months, levels = month.name))
+round(100 * tab / sum(tab))
+site0 <- unique(subset(pm0, State.Code == 36, c(County.Code, Site.ID)))
+site1 <- unique(subset(pm1, State.Code == 36, c(County.Code, Site.ID)))
+site0 <- paste(site0[,1], site0[,2], sep = ".")
+site1 <- paste(site1[,1], site1[,2], sep = ".")
+str(site0)
+str(site1)
